@@ -48,7 +48,7 @@ const vCard=v=>{let on=0;const pw=h('div',{class:'mono'},'•••••••�
 // ---- views
 function askV(){const log=h('div',{class:'log'},chat.map(c=>{const r=c.r,cards=r?(r.wantV?[...r.v.map(vCard),...r.d.map(dCard)]:[...r.d.map(dCard),...r.v.map(vCard)]):[];return h('div',{class:'m'+(c.b?'':' u')+(cards.length?' w':'')},c.t,cards)}));
  const go=()=>{const i=$('#qi'),t=i.value.trim();if(!t)return;const r=find(t),a=r.d.length,b=r.v.length;chat.push({t},{b:1,r,t:a+b?`Found ${a} document${a==1?'':'s'} and ${b} login${b==1?'':'s'}.`:'Nothing matches that. Try the file name, a tag, or a word from your notes.'});render()};
- setTimeout(()=>log.scrollTop=log.scrollHeight);return h('div',{class:'ask'},log,h('div',{class:'send'},h('input',{id:'qi',placeholder:'What are you looking for?',onkeydown:e=>e.key=='Enter'&&go()}),btn('Ask',go,'p')))}
+ setTimeout(()=>log.scrollTop=log.scrollHeight);return h('div',{class:'ask'},log,h('div',{class:'send'},h('input',{id:'qi',placeholder:'What are you looking for?',onkeydown:e=>{if(e.key=='Enter')go()}}),btn('Ask',go,'p')))}
 function docsV(){const l=h('div'),draw=()=>{const a=q?find(q).d:[...docs].sort((a,b)=>b.added-a.added);l.replaceChildren(...(a.length?a.map(dCard):[h('p',{class:'mu'},q?'No match.':'No documents yet. Add a PDF, photo or note.')]))};draw();
  return h('div',{class:'v'},h('div',{class:'row'},btn('Add files',()=>pick('#fi'),'p'),btn('Scan with camera',()=>pick('#fc'))),h('input',{placeholder:'Filter documents',value:q,oninput:e=>{q=e.target.value;draw()}}),l)}
 const vaultV=()=>h('div',{class:'v'},h('div',{class:'row'},btn('Add login',()=>editV(),'p')),vault.length?vault.map(vCard):h('p',{class:'mu'},'No logins yet. Add one to keep your IDs and passwords here.'));
@@ -64,6 +64,6 @@ async function unlock(){const p=$('#pw').value,mt=JSON.parse(localStorage.almari
  catch{key=null;b.disabled=false;b.textContent='Unlock';em.textContent='Wrong password.';return}
  db=db||await idb();docs=await Promise.all((await all('docs')).map(async r=>({...await openJ(r.d),id:r.id})));docs.forEach(ix);vault=await Promise.all((await all('vault')).map(async r=>({...await openJ(r.d),id:r.id})));
  b.disabled=false;$('#lk').style.display='none';rmTmp();render()}
-$('#ub').onclick=unlock;$('#pw').onkeydown=$('#pw2').onkeydown=e=>e.key=='Enter'&&unlock();$('#lb').onclick=()=>key&&lock();
+$('#ub').onclick=unlock;$('#pw').onkeydown=$('#pw2').onkeydown=e=>{if(e.key=='Enter')unlock()};$('#lb').onclick=()=>key&&lock();
 document.addEventListener('visibilitychange',()=>{if(document.hidden)t0=Date.now();else{if(key&&Date.now()-t0>(skip?9e5:12e4))lock();skip=false}});
 showLock();
