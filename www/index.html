@@ -1,38 +1,44 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark"><title>Almari</title>
+<script>document.documentElement.dataset.t=localStorage.th||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')</script>
 <style>
-:root{--bg:#eef1f5;--card:#fff;--ink:#16202b;--mute:#6b7785;--ac:#2f45c5;--ac2:#fff;--ln:#dbe1e8;--top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px),20px);--bot:max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px),10px)}
-@media(prefers-color-scheme:dark){:root{--bg:#10151b;--card:#19212a;--ink:#e8edf2;--mute:#8f9ba8;--ac:#8fa2ff;--ac2:#10151b;--ln:#2a343f}}
-*{box-sizing:border-box}html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,sans-serif;display:flex;flex-direction:column;padding-top:var(--top)}
-header{display:flex;justify-content:space-between;align-items:center;padding:8px 16px}header b{font-size:22px;letter-spacing:-.5px}
-#main{flex:1;min-height:0}.v{height:100%;overflow:auto;padding:4px 16px 16px}
-nav{display:flex;border-top:1px solid var(--ln);background:var(--card);padding-bottom:var(--bot)}
-nav button{flex:1;padding:14px 0;border:0;background:none;color:var(--mute);font:inherit;font-weight:600}
-nav button.on{color:var(--ac);box-shadow:inset 0 3px var(--ac)}
-.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:12px;margin:8px 0}
-.mu{color:var(--mute);font-size:14px}.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
-.b{border:1px solid var(--ln);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 12px;font:inherit;font-size:14px}
-.b.p{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
-input,textarea{width:100%;padding:11px;border:1px solid var(--ln);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;margin:4px 0 10px}
+:root{--bg1:#eaeff8;--bg2:#cdd8ee;--glow:rgba(255,255,255,.9);--ink:#14213d;--mute:#61708a;--glass:rgba(255,255,255,.6);--gs:rgba(255,255,255,.82);--gb:rgba(255,255,255,.9);--ac:#1d3fbf;--b1:#26409a;--b2:#0e1d55;--sh:0 10px 30px rgba(31,52,110,.15);--top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px),20px);--bot:max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px),10px)}
+:root[data-t=dark]{--bg1:#050a1a;--bg2:#0c1a40;--glow:rgba(63,107,255,.32);--ink:#e9efff;--mute:#8da0c8;--glass:rgba(22,34,74,.55);--gs:rgba(14,24,56,.85);--gb:rgba(130,160,255,.24);--ac:#8fb0ff;--b1:#5b84ff;--b2:#2548d8;--sh:0 10px 30px rgba(0,0,0,.5)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;margin:0}
+body,#lk{background:radial-gradient(circle at 90% 0,var(--glow),transparent 45%),radial-gradient(circle at 0 100%,var(--glow),transparent 45%),linear-gradient(165deg,var(--bg1),var(--bg2)) fixed}
+body{color:var(--ink);font:16px/1.4 system-ui,sans-serif;display:flex;flex-direction:column;padding-top:var(--top)}
+.card,.m,.b,input,textarea{background:var(--glass);border:1px solid var(--gb);color:var(--ink);box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4)}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 18px}header b{font-size:24px;font-weight:700;letter-spacing:-.6px}header div{display:flex;gap:8px}
+#main{flex:1;min-height:0}.v{height:100%;overflow:auto;padding:4px 16px 24px}
+.card{border-radius:20px;padding:14px;margin:10px 0}.mu{color:var(--mute);font-size:14px}.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.b{border-radius:999px;padding:10px 16px;font:inherit;font-size:14px;font-weight:600}.ib{height:42px;padding:0 16px}
+.b.p{background:linear-gradient(135deg,var(--b1),var(--b2));border:0;color:#fff;box-shadow:0 8px 20px rgba(30,60,200,.35)}
+input,textarea{width:100%;padding:12px 14px;border-radius:16px;font:inherit;margin:4px 0 10px;box-shadow:none}
 label{display:block;font-size:13px;color:var(--mute)}
 .ask{display:flex;flex-direction:column;height:100%}.log{flex:1;overflow:auto;padding:4px 16px}
-.m{max-width:88%;padding:10px 12px;border-radius:14px;margin:8px 0;background:var(--bg);border:1px solid var(--ln)}
-.m.w{max-width:100%}.m.u{margin-left:auto;background:var(--ac);color:var(--ac2);border-color:var(--ac)}
-.send{display:flex;gap:8px;padding:8px 16px}.send input{margin:0}
-#lk{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:32px;padding-top:var(--top)}
-#lk h1{margin:0 0 8px}#em{color:#c0392b;min-height:1.4em}
-.ov{position:fixed;inset:0;z-index:5;background:#0007;display:flex;align-items:flex-end}
-.sh{background:var(--bg);width:100%;max-height:88%;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(var(--bot) + 16px)}
+.m{max-width:88%;padding:11px 14px;border-radius:20px;margin:10px 0}.m.w{max-width:100%}
+.m.u{margin-left:auto;background:linear-gradient(135deg,var(--b1),var(--b2));color:#fff;border:0}
+.send{display:flex;gap:8px;padding:8px 16px;align-items:center}.send input{margin:0;border-radius:999px}
+nav{display:flex;align-items:center;justify-content:space-around;margin:6px 14px calc(var(--bot) + 4px);padding:6px 8px;border-radius:32px;background:var(--gs);border:1px solid var(--gb);box-shadow:var(--sh);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+nav button{flex:1;padding:12px 0;border:0;background:none;color:var(--mute);font:inherit;font-size:14px;font-weight:600}
+nav button.on{color:var(--ac)}
+nav .orb{flex:0 0 64px;width:64px;height:64px;margin-top:-28px;border-radius:50%;padding:0;color:#fff;background:radial-gradient(circle at 35% 28%,#8db0ff,#2447d6 62%,#0a1a6e);box-shadow:0 0 0 6px var(--glass),0 0 26px rgba(70,110,255,.6)}
+nav .orb.on{color:#fff;box-shadow:0 0 0 6px var(--glass),0 0 38px rgba(90,130,255,.95)}
+#lk{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;justify-content:center;padding:32px;padding-top:var(--top)}
+#lk h1{margin:0 0 8px}#lk h1::before{content:"";display:block;width:64px;height:64px;border-radius:50%;margin-bottom:18px;background:radial-gradient(circle at 35% 28%,#8db0ff,#2447d6 62%,#0a1a6e);box-shadow:0 0 30px rgba(70,110,255,.7)}
+#em{color:#e5484d;min-height:1.4em}
+.ov{position:fixed;inset:0;z-index:5;background:rgba(5,10,30,.45);display:flex;align-items:flex-end}
+.sh{background:var(--gs);border:1px solid var(--gb);border-bottom:0;width:100%;max-height:88%;overflow:auto;border-radius:28px 28px 0 0;padding:18px 16px calc(var(--bot) + 16px);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
 .sh h2{margin:0 0 8px;font-size:18px;word-break:break-word}
-.pv{max-width:100%;max-height:50vh;display:block;margin:8px auto;overflow:auto;white-space:pre-wrap;font-size:13px}
-#tt{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:20px;font-size:14px;z-index:20}
+.pv{max-width:100%;max-height:50vh;display:block;margin:8px auto;overflow:auto;white-space:pre-wrap;font-size:13px;border-radius:16px}
+#tt{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:var(--gs);color:var(--ink);border:1px solid var(--gb);padding:9px 16px;border-radius:999px;font-size:14px;z-index:20;box-shadow:var(--sh)}
 .mono{font-family:ui-monospace,monospace}
 </style></head><body>
-<header><b>Almari</b><button class="b" id="lb">Lock</button></header>
+<header><b>Almari</b><div><button class="b ib" id="tb">Theme</button><button class="b ib" id="lb">Lock</button></div></header>
 <div id="main"></div>
-<nav><button data-t="ask">Ask</button><button data-t="docs">Documents</button><button data-t="vault">Vault</button></nav>
+<nav><button data-t="docs">Documents</button><button data-t="ask" class="orb">Ask</button><button data-t="vault">Vault</button></nav>
 <input type="file" id="fi" multiple hidden><input type="file" id="fc" accept="image/*" capture="environment" hidden>
 <div id="lk"><h1 id="lh"></h1><p class="mu" id="lp"></p><input id="pw" type="password" placeholder="Master password" autocomplete="off"><input id="pw2" type="password" placeholder="Repeat master password" autocomplete="off"><button class="b p" id="ub"></button><p id="em"></p></div>
+<script>(()=>{const d=document.documentElement;document.getElementById('tb').onclick=()=>{localStorage.th=d.dataset.t=='dark'?'light':'dark';d.dataset.t=localStorage.th}})()</script>
 <script src="app.js"></script></body></html>
