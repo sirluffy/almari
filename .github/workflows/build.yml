@@ -20,6 +20,39 @@ jobs:
       - name: Patch Android project (camera permission)
         run: |
           sed -i 's|<application|<uses-permission android:name="android.permission.CAMERA" />\n    <uses-feature android:name="android.hardware.camera" android:required="false" />\n    <application|' android/app/src/main/AndroidManifest.xml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Set app icon
+        run: |
+          pip install pillow
+          python3 - <<'EOF'
+          from PIL import Image, ImageDraw
+          src = Image.open('icon.png').convert('RGB')
+          m = int(src.width * 0.048)
+          crop = src.crop((m, m, src.width - m, src.height - m))
+          res = 'android/app/src/main/res'
+          for d, k in {'mdpi': 1, 'hdpi': 1.5, 'xhdpi': 2, 'xxhdpi': 3, 'xxxhdpi': 4}.items():
+              p = res + '/mipmap-' + d + '/'
+              c = int(108 * k); t = int(62 * k)
+              fg = Image.new('RGB', (c, c), (0, 0, 0))
+              fg.paste(crop.resize((t, t), Image.LANCZOS), ((c - t) // 2, (c - t) // 2))
+              fg.save(p + 'ic_launcher_foreground.png')
+              s = int(48 * k)
+              sq = crop.resize((s, s), Image.LANCZOS).convert('RGBA')
+              mk = Image.new('L', (s, s), 0)
+              ImageDraw.Draw(mk).rounded_rectangle((0, 0, s - 1, s - 1), radius=int(s * 0.22), fill=255)
+              sq.putalpha(mk)
+              sq.save(p + 'ic_launcher.png')
+              inner = crop.resize((int(s * 0.8), int(s * 0.8)), Image.LANCZOS)
+              rd = Image.new('RGBA', (s, s), (0, 0, 0, 255))
+              rd.paste(inner, ((s - inner.width) // 2, (s - inner.height) // 2))
+              mk2 = Image.new('L', (s, s), 0)
+              ImageDraw.Draw(mk2).ellipse((0, 0, s - 1, s - 1), fill=255)
+              rd.putalpha(mk2)
+              rd.save(p + 'ic_launcher_round.png')
+          open(res + '/values/ic_launcher_background.xml', 'w').write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">#000000</color>\n</resources>\n')
+          EOF
       - run: npx cap sync android
       - run: ./gradlew assembleDebug
         working-directory: android
